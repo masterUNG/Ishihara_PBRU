@@ -23,7 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private RadioButton choice1RadioButton, choice2RadioButton,
             choice3RadioButton, choice4RadioButton;
     private Button answerButton;
-    private int radioAnInt, indexAnInt;
+    private int radioAnInt, indexAnInt, scoreAnInt;
+    private MyModel objMyModel;
 
 
     @Override
@@ -40,8 +41,59 @@ public class MainActivity extends AppCompatActivity {
         //Radio Controller
         radioController();
 
+        //About Model
+        aboutModel();
+
 
     }   // onCreate
+
+    private void aboutModel() {
+
+        objMyModel = new MyModel();
+
+        //Interface Call View
+        objMyModel.setOnMyModelChangeListener(new MyModel.OnMyModelChangeListener() {
+            @Override
+            public void onMyModelChangeListener(MyModel myModel) {
+
+                //Change View
+                changeView(myModel.getModelAnInt());
+
+            }
+        });
+
+    }   // aboutModel
+
+    private void changeView(int modelAnInt) {
+
+        //Change Image
+        int intDrawable[] = new int[]{R.drawable.ishihara_01, R.drawable.ishihara_02,
+                R.drawable.ishihara_03, R.drawable.ishihara_04, R.drawable.ishihara_05,
+                R.drawable.ishihara_06, R.drawable.ishihara_07, R.drawable.ishihara_08,
+                R.drawable.ishihara_09, R.drawable.ishihara_10};
+        ishiharaImageView.setImageResource(intDrawable[modelAnInt]);
+
+        //Change Choice
+        int intTimes[] = new int[10];
+        intTimes[0] = R.array.times1;
+        intTimes[1] = R.array.times2;
+        intTimes[2] = R.array.times3;
+        intTimes[3] = R.array.times4;
+        intTimes[4] = R.array.times5;
+        intTimes[5] = R.array.times6;
+        intTimes[6] = R.array.times7;
+        intTimes[7] = R.array.times8;
+        intTimes[8] = R.array.times9;
+        intTimes[9] = R.array.times10;
+
+        String strChoice[] = new String[4];
+        strChoice = getResources().getStringArray(intTimes[modelAnInt]);
+        choice1RadioButton.setText(strChoice[0]);
+        choice2RadioButton.setText(strChoice[1]);
+        choice3RadioButton.setText(strChoice[2]);
+        choice4RadioButton.setText(strChoice[3]);
+
+    }   // changeView
 
     private void radioController() {
 
@@ -105,6 +157,11 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
 
+            //Check Score
+            checkScore();
+
+            choiceRadioGroup.clearCheck();
+
             //Check Times
             checkTimes();
 
@@ -112,12 +169,27 @@ public class MainActivity extends AppCompatActivity {
 
     }   //checkZero
 
+    private void checkScore() {
+
+        int intAnswer[] = new int[]{1, 2, 3, 1, 2, 3, 1, 2, 4, 4};
+        int intUser[] = new int[10];
+        intUser[indexAnInt] = radioAnInt;
+
+        if (intUser[indexAnInt] == intAnswer[indexAnInt]) {
+            scoreAnInt++;
+        }
+
+    }   //checkScore
+
     private void checkTimes() {
 
         if (indexAnInt == 9) {
 
             //Intent to ShowScore
             Intent objIntent = new Intent(MainActivity.this, ShowScoreActivity.class);
+
+            objIntent.putExtra("Score", scoreAnInt);
+
             startActivity(objIntent);
             finish();
 
@@ -127,7 +199,11 @@ public class MainActivity extends AppCompatActivity {
             indexAnInt += 1;
 
             //Show Controller Call View
-            questionTextView.setText(Integer.toString(indexAnInt + 1) + ". What is this ?" );
+            questionTextView.setText(Integer.toString(indexAnInt + 1) + ". What is this ?");
+
+            //Show Controller Call Model
+            objMyModel.setModelAnInt(indexAnInt);
+
 
         }
 

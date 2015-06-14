@@ -199,7 +199,8 @@ public class MainActivity extends AppCompatActivity {
             indexAnInt += 1;
 
             //Show Controller Call View
-            questionTextView.setText(Integer.toString(indexAnInt + 1) + ". What is this ?");
+            //questionTextView.setText(Integer.toString(indexAnInt + 1) + ". What is this ?");
+            question(indexAnInt);
 
             //Show Controller Call Model
             objMyModel.setModelAnInt(indexAnInt);
@@ -208,6 +209,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }   //checkTimes
+
+    private void question(int indexAnInt) {
+        String strQuestion[] = getResources().getStringArray(R.array.question);
+        questionTextView.setText(strQuestion[indexAnInt]);
+    }
 
     private void bindWidget() {
 
